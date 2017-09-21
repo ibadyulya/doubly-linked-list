@@ -11,7 +11,6 @@ class LinkedList {
 
     append(data) 
     {
-        //http://www.internet-technologies.ru/articles/article_2599.html
         var node = new Node(data);
         //'#append', should assign any nodes to this._head and this._tail if list is empty;
         if (!this.length) 
@@ -47,11 +46,10 @@ class LinkedList {
         //#at, should return Node.data by index;
         var currNode = this._head;
         var count = 0;
-        if (index > 0 || index <= this.length)
+        if (index > 0 || index < this.length)
         {
             while (count < index) 
             {
-                
                 currNode = currNode.next;
                 count++;
                 
@@ -67,9 +65,8 @@ class LinkedList {
         var node = new Node(data);
         var currNode = this._head;
         var count = 0;
-        if (index > 0 || index <= this.length) 
-        {
-            
+        if (index > 0 || index < this.length) 
+        { 
              if (index == this.lenght) 
             {
                 this.append(data);
@@ -101,69 +98,63 @@ class LinkedList {
     {
        //#clear, should clear the list;
        this.length = 0;
-       this._head = new Node();
-       this._tail = new Node();
+       this._head.data = null; 
+       this._tail.data = null;
        return this;
       
     }
 
     deleteAt(index) 
     {
-        //http://www.internet-technologies.ru/articles/article_2599.html
         //deleteAt, should delete element by index;
-        var currentNode = this._head;
-        var count = 1;
-        var message = {failure: 'Failure: non-existent node in this list.'};
-        var beforeNodeToDelete = null;
-        var nodeToDelete = null;
-        var deletedNode = null;
-        // 1-ый случай: неверная позиция
-        if (this.length === 0 || index < 1 || index > this.length) 
-        {
-            throw new Error(message.failure);
-        }
-        // 2-ой случай: первый узел удален
-        if (index === 1) 
-        {
-            this._head = currentNode.next;
-
-            // 2-ой случай: существует второй узел
-            if (!this._head) {
-                this._head.prev = null;
-            // 2-ой случай: второго узла не существует
-            } else {
-                this._tail = null;
-            }
-        // 3-ий случай: последний узел удален
-        } 
-        else if (index === this.lenght) 
-        {
-            this._tail = this._tail.prev;
-            this._tail.next = null;
-        // 4-ый случай: средний узел удален
-        } 
-        else 
+        var currNode = this._head;
+        var count = 0;
+        if (index > 0 || index < this.length) 
         {
             while (count < index) 
             {
-                currentNode = currentNode.next;
+                currNode = currNode.next;
                 count++;
             }
-            beforeNodeToDelete = currentNode.prev;
-            nodeToDelete = currentNode;
-            afterNodeToDelete = currentNode.next;
-            beforeNodeToDelete.next = afterNodeToDelete;
-            afterNodeToDelete.prev = beforeNodeToDelete;
-            deletedNode = nodeToDelete;
-            nodeToDelete = null;
+            if(currNode.prev && currNode.next)
+            {
+            currNode.next.prev = currNode.prev;
+            currNode.prev.next = currNode.next;
+            }
+            if(!currNode.next && !currNode.prev)// if 1 node
+            {
+                this._head.data = null; 
+                this._tail.data = null;
+            }
+            if(!currNode.next)//if is tail;
+            {
+                this._tail.data = null;
+            }
+            if(!currNode.prev)
+            {
+                this._head.data = null;
+            }
+
+            this.lenght--;
+            return this;
         }
-    this.lenght--;
-    return message.success;
     }
 
     reverse() 
     {   
         //#reverse, should reverse the list;
+        var currNode = this._head;
+        while(currNode) 
+        {
+            var revNode = currNode.next;
+            currNode.next = currNode.prev;
+            currNode.prev = revNode;
+            currNode = revNode;
+        }
+        var revHT = this._head;
+        this._head = this._tail;
+        this._tail = revHT;
+        return this;
     
     }
 
@@ -171,14 +162,14 @@ class LinkedList {
     {
         //#indexOf should return index of element if data is found
         //should return -1 if data not found
-        var currentNode = this._head;
+        var currNodeNode = this._head;
         var count = 0;
         var notFound = -1;
         while (count < this.length) {
-          if (currentNode.data == data) {
+          if (currNodeNode.data == data) {
             return count;
           }
-          currentNode = currentNode.next;
+          currNodeNode = currNodeNode.next;
           count++;
         }
         return notFound;
