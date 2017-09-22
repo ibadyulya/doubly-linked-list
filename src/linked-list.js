@@ -162,14 +162,14 @@ class LinkedList {
     {
         //#indexOf should return index of element if data is found
         //should return -1 if data not found
-        var currNodeNode = this._head;
+        var currNode = this._head;
         var count = 0;
         var notFound = -1;
         while (count < this.length) {
-          if (currNodeNode.data == data) {
+          if (currNode.data == data) {
             return count;
           }
-          currNodeNode = currNodeNode.next;
+          currNode = currNode.next;
           count++;
         }
         return notFound;
